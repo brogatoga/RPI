@@ -1,0 +1,1 @@
+gcc main.c utils.c input_data.c -Wall -o shell
