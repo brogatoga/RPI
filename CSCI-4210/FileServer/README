@@ -1,0 +1,10 @@
+CSCI 4210: Operating Systems
+Homework 4: File Storage Server
+
+Ryan Lin (linr2@rpi.edu)
+
+
+*** NOTE ***
+
+1. My server does not always work correctly for binary files. I have no clue why.
+2. My server does not support the uploading of extremely large files. Sometimes it will upload part of the file and then the other part will be corrupted.

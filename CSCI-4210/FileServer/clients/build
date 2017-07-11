@@ -1,0 +1,2 @@
+g++ -Wall -pthread upload.cpp -o upload
+g++ -Wall -pthread upload-remote.cpp -o upload-remote
