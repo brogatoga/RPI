@@ -1,0 +1,23 @@
+CSCI 4210: Operating Systems
+Homework 2: CPU Scheduler
+
+Ryan Lin (linr2@rpi.edu)
+Rachel Guan (guanm@rpi.edu)
+
+
+There are two ways to change the variables in the stimulation:
+
+1. Modify the #define entries in constants.h file
+
+2. Pass in command line arguments, like this: 
+      ./test -n 50 -m 10 -c 8 -t 100
+
+   The above example will make the stimulation run with 50 processes, 10 CPU cores, 8ms context switch
+   time, and 100ms time slice for Round Robin. You can also pass in just one of (n, m, c, or t). But make
+   sure that you also add in a space followed by a numerical value to specify the value for that 
+   particular variable. 
+
+
+** Also, if you compile with the DEBUG flag asserted, then you will also see in
+   the output the times when processes start running or when a process is done 
+   with its I/O burst and re-enters the ready queue. 

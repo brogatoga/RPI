@@ -1,0 +1,1 @@
+g++ main.cpp process.cpp stat.cpp  -Wall -o cpu
