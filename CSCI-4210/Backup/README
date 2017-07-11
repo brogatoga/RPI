@@ -1,0 +1,12 @@
+CSCI 4210: Operating Systems
+Homework 3: File Back Utility
+
+Ryan Lin
+linr2@rpi.edu
+
+
+Usage:
+
+./mybackup
+./mybackup -r
+./mybackup --restore
