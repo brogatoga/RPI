@@ -1,0 +1,385 @@
+module pa3;
+
+import java.util.*;
+import java.io.*;
+
+
+// Main program code
+behavior Program
+{
+	double minDist=Double.MAX_VALUE;
+	double maxDist=Double.MIN_VALUE;
+	List minDistStars=new ArrayList();
+	List maxDistStars=new ArrayList();
+	double minMaxDist=Double.MAX_VALUE;
+	List minMaxDistStars=new ArrayList();
+	double maxMinDist=Double.MIN_VALUE;
+	List maxMinDistStars=new ArrayList();
+	double minAvgDist=Double.MAX_VALUE;
+	List minAvgDistStars=new ArrayList();
+	long initTime;
+	Object[] stars;
+	
+	
+	// Given a line containing 3D coordinate points for a star, parses it and returns a List [x,y,z]
+	List getStarData(String rawData) throws Exception
+	{
+		List lineSplit=Arrays.asList(rawData.split(" "));
+		
+		if(lineSplit.size()!=3)
+			throw new Exception("File format is wrong");
+		
+		double x=Double.valueOf((String)(lineSplit.get(0))).doubleValue();
+		double y=Double.valueOf((String)(lineSplit.get(1))).doubleValue();
+		double z=Double.valueOf((String)(lineSplit.get(2))).doubleValue();
+		
+		List starData=new ArrayList();
+		starData.add(x);
+		starData.add(y);
+		starData.add(z);
+		return starData;
+	}
+	
+	
+	// Filters out duplicate stars from the input data and returns an array containing only distinct stars
+	Object[] getDistinct(Object[] data)
+	{
+		HashSet distinctSet=new HashSet(Arrays.asList(data));
+		Object[] distinctArray=new Object[distinctSet.size()];
+		distinctSet.toArray(distinctArray);
+		return distinctArray;
+	}
+	
+	
+	// Returns the distance between two stars in 3D space
+	double calcDist(List star1, List star2)
+	{
+		return (Math.sqrt(Math.pow((double)(star1.get(0))-(double)(star2.get(0)), 2) + 
+							Math.pow((double)(star1.get(1))-(double)(star2.get(1)), 2) + 
+							Math.pow((double)(star1.get(2))-(double)(star2.get(2)), 2)));
+		
+	}
+	
+	
+	// Get an array of closest neighbors from an actor and update the current minimum
+	void tryUpdateMinDist(Object[] targetStars, int thisID)
+	{
+		if(targetStars.length!=0)
+		{
+			List thisStar=(List)(stars[thisID]);
+			List other = (List)(targetStars[0]);
+			
+			double dist=(Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(other.get(0)), 2) + 
+							Math.pow((double)(thisStar.get(1))-(double)(other.get(1)), 2) + 
+							Math.pow((double)(thisStar.get(2))-(double)(other.get(2)), 2)));
+			
+			if(minDist>dist)
+			{
+				minDist=dist;
+				minDistStars.clear();
+				for(int i=0; i!=targetStars.length; i++)
+				{
+					List starPair= new ArrayList();
+					starPair.add(thisStar);
+					starPair.add(other);
+					minDistStars.add(starPair);
+				}
+				
+			}
+			else if(minDist==dist)
+			{
+				for(int i=0; i!=targetStars.length; i++)
+				{
+					List starPair= new ArrayList();
+					starPair.add(thisStar);
+					starPair.add(other);
+					minDistStars.add(starPair);
+				}
+				
+			}
+			
+			//token distTok = calcDist(thisStar, other);
+			//updateMinDist(distTok, thisID, targetStars)@currentContinuation;
+		}
+	}
+	
+	void tryUpdateMaxDist(Object[] targetStars, int thisID)
+	{
+		if(targetStars.length!=0)
+		{
+			List thisStar=(List)(stars[thisID]);
+			List other = (List)(targetStars[0]);
+			
+			
+			//token distTok = calcDist(thisStar, other);
+			//updateMaxDist(distTok, thisID, targetStars)@currentContinuation;
+		
+		
+			double dist=(Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(other.get(0)), 2) + 
+								Math.pow((double)(thisStar.get(1))-(double)(other.get(1)), 2) + 
+								Math.pow((double)(thisStar.get(2))-(double)(other.get(2)), 2)));
+			
+			if(maxDist<dist)
+			{
+				maxDist=dist;
+				maxDistStars.clear();
+				for(int i=0; i!=targetStars.length; i++)
+				{
+					List starPair= new ArrayList();
+					starPair.add(thisStar);
+					starPair.add(other);
+					maxDistStars.add(starPair);
+				}
+				
+			}
+			else if(maxDist==dist)
+			{
+				for(int i=0; i!=targetStars.length; i++)
+				{
+					List starPair= new ArrayList();
+					starPair.add(thisStar);
+					starPair.add(other);
+					maxDistStars.add(starPair);
+				}
+				
+			}
+		}
+	}
+	
+	void tryUpdateMinMaxDist(double dist, int thisID)
+	{
+		if(minMaxDist>dist)
+		{
+			minMaxDist=dist;
+			minMaxDistStars.clear();
+			minMaxDistStars.add(stars[thisID]);
+		}
+		else if(minMaxDist==dist)
+		{
+			minMaxDistStars.add(stars[thisID]);
+		}
+	}
+	
+	void tryUpdateMaxMinDist(double dist, int thisID)
+	{
+		if(maxMinDist<dist)
+		{
+			maxMinDist=dist;
+			maxMinDistStars.clear();
+			maxMinDistStars.add(stars[thisID]);
+		}
+		else if(maxMinDist==dist)
+		{
+			maxMinDistStars.add(stars[thisID]);
+		}
+	}
+	
+	void tryUpdateMinAvgDist(double dist, int thisID)
+	{
+		if(minAvgDist>dist)
+		{
+			minAvgDist=dist;
+			minAvgDistStars.clear();
+			minAvgDistStars.add(stars[thisID]);
+		}
+		else if(minAvgDist == dist)
+		{
+			minAvgDistStars.add(stars[thisID]);
+		}
+	}
+	
+	void endTimer()
+	{
+		long endTime=System.currentTimeMillis();
+		long runningTime=endTime-initTime;
+		System.out.println("The run time for this program is: "+runningTime/1000+" seconds");
+	}
+	
+	
+	// Prints the final results to show to the user
+	void getResults()
+	{
+		//System.out.println("------------------Analysis ends...");
+		//endTimer();
+		System.out.println(minDist);
+		for(int i=0; i!=minDistStars.size(); i++)
+		{
+			List star1 = (List)((List)minDistStars.get(i)).get(0);
+			List star2 = (List)((List)minDistStars.get(i)).get(1);
+			System.out.printf("<%1$.8f, %2$.8f, %3$.8f> ", star1.get(0), star1.get(1), star1.get(2));
+			System.out.printf("<%1$.8f, %2$.8f, %3$.8f>\n", star2.get(0), star2.get(1), star2.get(2));
+		}
+		
+		System.out.println(maxDist);
+		for(int i=0; i!=maxDistStars.size(); i++)
+		{
+			List star1 = (List)((List)maxDistStars.get(i)).get(0);
+			List star2 = (List)((List)maxDistStars.get(i)).get(1);
+			System.out.printf("<%1$f, %2$f, %3$f> ", star1.get(0), star1.get(1), star1.get(2));
+			System.out.printf("<%1$f, %2$f, %3$f>\n", star2.get(0), star2.get(1), star2.get(2));
+		}
+		
+		System.out.println(minMaxDist);
+		for(int i=0; i!=minMaxDistStars.size(); i++)
+		{
+			List star=(List)(minMaxDistStars.get(i));
+			System.out.printf("<%1$f, %2$f, %3$f>\n", star.get(0), star.get(1), star.get(2));
+		}
+		
+		System.out.println(maxMinDist);
+		for(int i=0; i!=maxMinDistStars.size(); i++)
+		{
+			List star=(List)(maxMinDistStars.get(i));
+			System.out.printf("<%1$f, %2$f, %3$f>\n", star.get(0), star.get(1), star.get(2));
+		}
+		
+		System.out.println(minAvgDist);
+		for(int i=0; i!=minAvgDistStars.size(); i++)
+		{
+			List star=(List)(minAvgDistStars.get(i));
+			System.out.printf("<%1$f, %2$f, %3$f>\n", star.get(0), star.get(1), star.get(2));
+		}
+	}
+	
+	
+	// Runs the algorithm and computes all five distances
+	void analyzeDistributed(Object[] stars)
+	{
+		this.stars=stars;
+		int numActors=12;
+		Star[] actors=new Star[numActors];
+		int numTheaters = 3;
+		int currentTheater = 0;
+		String theater1 = "rmsp://localhost:4040/a";
+		String theater2 = "rmsp://localhost:4041/a";
+		String theater3 = "rmsp://localhost:4042/a";
+			
+		//System.out.println("------------------Creating remote actors...");
+		for(int j=0, curStar=0; j!=actors.length && curStar!=stars.length; j++, curStar++)
+		{
+			UAN uan = new UAN("uan://localhost:3030/a"+j);
+			UAL ual = null;
+			
+			switch (currentTheater) {
+				case 0: ual = new UAL(theater1+j); break;
+				case 1: ual = new UAL(theater2+j); break;
+				case 2: ual = new UAL(theater3+j); break;
+			}
+			
+			
+			actors[curStar]=new Star(stars) at (uan, ual);
+			//
+			//System.out.println("Actor "+curStar+" is created at"+actors[curStar].getUAL());
+			
+			currentTheater = (currentTheater + 1) % numTheaters;
+		}
+		
+		//System.out.println("------------------Analysis begins...");
+		this.initTime=System.currentTimeMillis();
+		int curStar=0;
+		join{
+			while(curStar<stars.length)
+			{
+				for(int i=0; i<actors.length; i++, curStar++)
+				{
+					if(actors[i]!=null && curStar<stars.length)
+					{
+						
+						actors[i]<-findMinDistNeighbors(curStar)@
+						tryUpdateMinDist(token, curStar);
+						
+						actors[i]<-findMaxDistNeighbors(curStar)@
+						tryUpdateMaxDist(token, curStar);
+						
+						actors[i]<-findMinDist(curStar)@
+						tryUpdateMaxMinDist(token, curStar);
+						
+						actors[i]<-findMaxDist(curStar)@
+						tryUpdateMinMaxDist(token, curStar);
+						
+						actors[i]<-findAvgDist(curStar)@
+						tryUpdateMinAvgDist(token, curStar);
+					}
+				}
+			}
+		} @ getResults();//Does this wait for all the tryUpdateDist messages have finished processing?		
+	}
+	
+	
+	// Runs the algorithm and computes all five distances
+	void analyze(Object[] stars)
+	{
+		//System.out.println("------------------Analysis begins...");
+		this.initTime=System.currentTimeMillis();
+		this.stars=stars;
+		int numActors=12;
+		Star[] actors=new Star[numActors];
+			
+		for(int j=0, curStar=0; j!=actors.length && curStar!=stars.length; j++, curStar++)
+		{
+			actors[curStar]=new Star(stars);
+		}
+		
+		int curStar=0;
+		
+		join{
+			while(curStar<stars.length)
+			{
+				for(int i=0; i<actors.length; i++, curStar++)
+				{
+					if(actors[i]!=null && curStar<stars.length)
+					{
+						//
+						/*System.out.println("Sending star "+curStar+"<"+((List)stars[curStar]).get(0)+","+
+																	((List)stars[curStar]).get(1)+", "+
+																	((List)stars[curStar]).get(2)+"> to "+i+"...");*/
+						actors[i]<-findMinDistNeighbors(curStar)@
+						tryUpdateMinDist(token, curStar);
+						
+						actors[i]<-findMaxDistNeighbors(curStar)@
+						tryUpdateMaxDist(token, curStar);
+						
+						actors[i]<-findMinDist(curStar)@
+						tryUpdateMaxMinDist(token, curStar);
+						
+						actors[i]<-findMaxDist(curStar)@
+						tryUpdateMinMaxDist(token, curStar);
+						
+						actors[i]<-findAvgDist(curStar)@
+						tryUpdateMinAvgDist(token, curStar);
+					}
+				}
+			}
+		} @ getResults();//Does this wait for all the tryUpdateDist messages have finished processing?		
+	}
+	
+	
+	// Main method called when the actor is instantiate
+	void act(String[] args) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+		String line = reader.readLine();
+		
+		if (args.length >=1) {
+			String x = args[args.length - 1];
+			if (x.equals("dist")) {
+				//System.out.println("Distributed mode");
+				join { 
+					while((line = reader.readLine()) != null) {
+						getStarData(line);
+					}
+				} @ getDistinct(token) @ analyzeDistributed(token);
+			}
+		}
+		else
+		{
+			join { 
+				while((line = reader.readLine()) != null) {
+					getStarData(line);
+				}
+			} @ getDistinct(token) @ analyze(token);
+	
+		}
+		reader.close();
+	}
+}

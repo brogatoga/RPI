@@ -1,0 +1,165 @@
+module pa3;
+
+import java.util.*;
+import java.io.*;
+
+behavior Star implements ActorService{
+	Object[] stars;
+	double minDist=Double.MAX_VALUE;
+	double maxDist=Double.MIN_VALUE;
+	double totalDist=0;
+	List minDistStars=new ArrayList();
+	List maxDistStars=new ArrayList();
+	
+	// Initialize Star instance with a new array of star objects
+	Star(Object[] stars)
+	{
+		this.stars=stars;
+	}
+	
+	//Find the closest neighbor(s) for starID
+	Object[] findMinDistNeighbors(int starID)//Other calls to this method will mess up the return minDistStars.
+	{ 
+		this.minDist=Double.MAX_VALUE;
+		this.minDistStars.clear();
+		List thisStar=(List)this.stars[starID];
+		for(int i=starID+1; i!=stars.length; i++)
+		{
+			List otherStar=(List)this.stars[i];
+			
+			double dist = Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(otherStar.get(0)), 2) + 
+					Math.pow((double)(thisStar.get(1))-(double)(otherStar.get(1)), 2) + 
+					Math.pow((double)(thisStar.get(2))-(double)(otherStar.get(2)), 2));
+			
+			if(minDist>dist)
+			{
+				minDist=dist;
+				minDistStars.clear();
+				minDistStars.add(otherStar);
+				//
+				//System.out.println("Star "+starID+" has "+minDistStars.size()+" ");
+			}
+			else if(minDist==dist)
+			{
+				minDistStars.add(otherStar);
+			}
+		}
+		
+		return minDistStars.toArray();
+		
+	}
+	
+	//Find the closest neighbor(s) for starID
+	Object[] findMaxDistNeighbors(int starID)
+	{
+		this.maxDist=Double.MIN_VALUE;
+		this.maxDistStars.clear();
+		for(int i=starID+1; i!=stars.length; i++)
+		{
+			//calcDist(starID, i);//@updateDist(token, i);
+			List thisStar=(List)this.stars[starID];
+			List otherStar=(List)this.stars[i];
+			double dist = (Math.sqrt(Math.pow((Double)(thisStar.get(0))-(Double)(otherStar.get(0)), 2) + 
+					Math.pow((Double)(thisStar.get(1))-(Double)(otherStar.get(1)), 2) + 
+					Math.pow((Double)(thisStar.get(2))-(Double)(otherStar.get(2)), 2)));
+			
+			if(maxDist<dist)
+			{
+				maxDist=dist;
+				maxDistStars.clear();						
+				maxDistStars.add(otherStar);
+			}
+			else if(maxDist==dist)
+			{
+				maxDistStars.add(otherStar);
+			}
+			
+		}
+		
+		return maxDistStars.toArray();
+	}
+	
+	//Find the minimum distance from starID to any other stars
+	double findMinDist(int starID)
+	{
+		this.minDist=Double.MAX_VALUE;
+		this.minDistStars.clear();
+		
+		
+		List thisStar=(List)this.stars[starID];
+		for(int i=0; i!=stars.length; i++)
+		{
+			if(i!=starID)
+			{
+				List otherStar=(List)this.stars[i];
+				
+				double dist = Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(otherStar.get(0)), 2) + 
+						Math.pow((double)(thisStar.get(1))-(double)(otherStar.get(1)), 2) + 
+						Math.pow((double)(thisStar.get(2))-(double)(otherStar.get(2)), 2));
+				
+				if(minDist>dist)
+				{
+					minDist=dist;
+				}
+				if(maxDist<dist)
+				{
+					maxDist=dist;
+				}
+				
+			}
+		}
+		
+		return minDist;
+		
+	}
+	
+	//Find the maximum distance from starID to any other stars
+	double findMaxDist(int starID)
+	{
+		this.maxDist=Double.MIN_VALUE;
+		this.maxDistStars.clear();
+		
+		List thisStar=(List)this.stars[starID];
+		for(int i=0; i!=stars.length; i++)
+		{
+			if(i!=starID)
+			{
+				List otherStar=(List)this.stars[i];
+				
+				double dist = Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(otherStar.get(0)), 2) + 
+						Math.pow((double)(thisStar.get(1))-(double)(otherStar.get(1)), 2) + 
+						Math.pow((double)(thisStar.get(2))-(double)(otherStar.get(2)), 2));
+				
+				if(maxDist<dist)
+				{
+					maxDist=dist;
+				}
+			}
+		}
+		
+		return maxDist;
+	}
+	
+	//Find the average distance from starID to all other stars
+	double findAvgDist(int starID)
+	{
+		this.totalDist=0;
+		List thisStar=(List)this.stars[starID];
+		for(int i=0; i!=stars.length; i++)
+		{
+			if(i!=starID)
+			{
+				List otherStar=(List)this.stars[i];
+				
+				double dist = Math.sqrt(Math.pow((double)(thisStar.get(0))-(double)(otherStar.get(0)), 2) + 
+						Math.pow((double)(thisStar.get(1))-(double)(otherStar.get(1)), 2) + 
+						Math.pow((double)(thisStar.get(2))-(double)(otherStar.get(2)), 2));
+				
+				totalDist+=dist;
+			}
+		}
+		return totalDist/stars.length;
+	}
+	
+	
+}

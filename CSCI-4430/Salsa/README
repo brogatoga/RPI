@@ -1,0 +1,16 @@
+CSCI 4430: Programming Languages
+PA3: Space Colonization Problem
+
+Ryan Lin (linr2@rpi.edu)
+Michael Xie (xiey3@rpi.edu)
+
+How to run this program:
+
+1) Compile Program.salsa and Star.salsa into Java code
+2) Compile the Java code files into class files
+3) Run the name server and have it listen on port 3030
+4) Run each of the theaters specified in theaters.txt (ports 4040, 4041, and 4042)
+5) Run the main program (pa3.Program)
+  	- To run the concurrent version, run it with no arguments
+	- To run the distributed version, run it with one argument called dist
+	- You must create a file called input.txt in base directory containing star data
