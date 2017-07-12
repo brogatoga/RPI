@@ -1,0 +1,135 @@
+﻿Building configuration...
+
+
+Current configuration : 1438 bytes
+!
+! Last configuration change at 22:32:26 UTC Thu Nov 19 2015
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R6
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+memory-size iomem 10
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FTX14410006
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+license boot module c2900 technology-package datak9
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/1
+ ip address 10.3.45.3 255.255.255.0
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/1.26
+ encapsulation dot1Q 26
+ ip address 10.0.26.2 255.255.255.0
+!
+interface GigabitEthernet0/1.46
+ encapsulation dot1Q 46
+ ip address 10.0.46.2 255.255.255.0
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no clock rate 2000000
+ !
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+ !
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+ !
+!
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+scheduler allocate 20000 1000
+end
+

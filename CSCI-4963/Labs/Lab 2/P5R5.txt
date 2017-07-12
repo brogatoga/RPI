@@ -1,0 +1,171 @@
+﻿Building configuration...
+
+
+Current configuration : 2407 bytes
+!
+! Last configuration change at 22:20:00 UTC Thu Sep 17 2015
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname GatewayRouter
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+memory-size iomem 20
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+ip dhcp excluded-address 192.168.5.1 192.168.5.4
+ip dhcp excluded-address 192.168.6.1 192.168.6.4
+!
+ip dhcp pool VLAN5-POOL
+   network 192.168.5.0 255.255.255.0
+   default-router 192.168.5.1 
+   dns-server 192.168.5.1 
+!
+ip dhcp pool VLAN6-POOL
+   network 192.168.6.0 255.255.255.0
+   default-router 192.168.6.1 
+   dns-server 192.168.6.1 
+!
+!
+no ip domain lookup
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FTX144003EL
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+license boot module c2900 technology-package datak9
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 201.201.201.1 255.255.255.224
+ !
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/0.5
+ shutdown
+!
+interface GigabitEthernet0/0.6
+ shutdown
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/1.5
+ encapsulation dot1Q 5
+ ip address 192.168.5.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+!
+interface GigabitEthernet0/1.6
+ encapsulation dot1Q 6
+ ip address 192.168.6.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+!
+interface GigabitEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ no clock rate 2000000
+ !
+!
+interface Serial0/0/1
+ ip address 200.200.200.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly
+ no clock rate 2000000
+ !
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip nat pool POOL 201.201.201.1 201.201.201.1 netmask 255.255.255.252
+ip nat inside source list 1 pool POOL overload
+ip route 0.0.0.0 0.0.0.0 200.200.200.1
+ip route 0.0.0.0 0.0.0.0 Serial0/0/1
+!
+access-list 1 permit 192.168.5.0 0.0.0.255
+access-list 1 permit 192.168.6.0 0.0.0.255
+!
+!
+!
+!
+!
+!
+control-plane
+ !
+!
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+!
+scheduler allocate 20000 1000
+end
+

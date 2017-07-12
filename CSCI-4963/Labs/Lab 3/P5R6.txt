@@ -1,0 +1,140 @@
+﻿Building configuration...
+
+
+Current configuration : 1554 bytes
+!
+! Last configuration change at 20:10:29 UTC Tue Oct 27 2015
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RemoteBranch
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+!
+!
+memory-size iomem 10
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FTX14410006
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package uck9
+license boot module c2900 technology-package datak9
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ !
+!
+interface GigabitEthernet0/1.100
+ encapsulation dot1Q 100
+ ip address 192.168.100.1 255.255.255.0
+!
+interface Serial0/0/0
+ no ip address
+ encapsulation frame-relay
+ no fair-queue
+ no clock rate 2000000
+ !
+!
+interface Serial0/0/0.605 point-to-point
+ ip address 172.32.1.6 255.255.255.252
+ frame-relay interface-dlci 605   
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+ !
+!
+!
+router rip
+ version 2
+ passive-interface GigabitEthernet0/1
+ network 172.32.0.0
+ network 192.168.100.0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+ !
+!
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+!
+scheduler allocate 20000 1000
+end
+
