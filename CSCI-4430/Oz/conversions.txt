@@ -1,0 +1,48 @@
+Lambda Calculus Conversions
+------------------------------------
+
+[lambda(x lambda(y [y x])) [y w]]
+	=> lambda(y [y [y w]])				Beta reduction
+	=> lambda(z [z [y w]])				Alpha renaming
+	
+	
+[lambda(x lambda(y [x y])) [y w]]
+	=> lambda(y [[y w] y])				Beta reduction
+	=> lambda(z [[y w] z])				Alpha renaming
+	=> [y w]							Eta reduction
+	
+	
+[lambda(x x) y]
+	=> y								Beta reduction
+	
+	
+lambda(x [y x])
+	=> y								Eta reduction
+	
+	
+[[lambda(y lambda(x [y x])) lambda(x [x x])] y]
+	=> [lambda(x [lambda(z [z z]) x]) y]				Beta reduction
+	=> [lambda(z [z z]) y]								Beta reduction
+	=> [y y]											Beta reduction
+	
+	
+[[[lambda(b lambda(t lambda(e [[b t] e]))) lambda(x lambda(y x))] x] y]
+	=> [[lambda(t lambda(e [[lambda(x lambda(y x)) t] e])) x] y]			Beta reduction
+	=> [lambda(e [[lambda(x lambda(y x)) x] e])) y]							Beta reduction
+	=> [[lambda(x lambda(y x)) x] y]										Beta reduction
+	=> [lambda(y x) y]														Beta reduction
+	=> x																	Eta reduction
+	
+	
+	
+lambda(x [[lambda(x [y x]) lambda(x [z x])] x])
+	=> [[lambda(x [y x]) lambda(x [z x])] x]			Eta reduction
+	=> [[y z] x]										Eta reduction
+	=> [y z]											Eta reduction  (???)
+	
+	
+[lambda(y [lambda(x lambda(y [x y])) y]) [y w]]
+	=> [lambda(x lambda(y [x y])) [y w]]			   	Beta reduction
+	=> [lambda(x lambda(y [x y])) [z w]]				Alpha renaming
+	=> lambda(y [[z w] y])								Beta reduction
+	=> [z w]											Eta reduction
