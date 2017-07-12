@@ -1,0 +1,54 @@
+CSCI 4430: Programming Languages
+Homework 1
+
+Ryan Lin - linr2@rpi.edu
+
+I have extensively tested my program and haven't found any bugs in
+any of the three parts. 
+
+I did all of the extra credit. Everything is described below:
+
+========================================================================================
+
+For extra credit for part 2, run the "loop2" predicate and input the parse tree string to
+get the resulting sentence. You MUST end the inputted parse tree with a period in order for this to work.
+For example:
+
+	?- loop2.
+	|: s(np(det(every),nom(noun(train))),vp(verb(arrived))).
+	every train arrived.
+			
+	
+For extra credit for part 3, I added in one new query and one new command, described below:
+	- You can issue a "did" or "did not" command to two things at once, for example:
+	
+		|: the people ryan and fred left.
+		|: the trains a and b did not stay.
+		
+		** Notice that you must use the plural form of the noun in order for this to work **
+		
+		
+	- You can query and ask the system which things did or did not do what. For example:
+	
+		|: the people alice and bob left.
+		|: the person carlos did not leave.
+		|: the trains a and b left.
+		|: the train c left.
+		|: which people left?
+		alice and bob
+		|: which people did not leave?
+		carlos
+		|: which trains left?
+		a, b, and c
+		|: which bikes flew?
+		None of them
+		
+		** Again, you must use the plural form of the noun in order for this to work **
+		
+
+Also for Part 3, entering in an invalid query or command followed by a period will cause the message "Huh?" to be shown.
+For example:
+
+	|: prog lang is fun.
+	Huh?
+	
