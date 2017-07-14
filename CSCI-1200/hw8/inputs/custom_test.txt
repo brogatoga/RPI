@@ -1,0 +1,49 @@
+add_person Bob
+add_friendship Bob Bob
+print
+print_invite_list Bob 5
+
+add_message Bob "hello world"
+pass_messages
+print
+
+add_person Bob2
+add_person Bob3
+add_person Bob4
+add_person Bob5
+add_friendship Bob Bob2
+add_friendship Bob2 Bob3
+add_friendship Bob3 Bob4
+add_friendship Bob4 Bob5
+print
+print_invite_list Bob 5
+print_invite_list Bob3 1
+print_invite_list Bob3 2
+
+pass_messages
+pass_messages
+pass_messages
+pass_messages
+print
+pass_messages
+pass_messages
+pass_messages
+pass_messages
+print
+
+remove_person Bob
+remove_person Bob2
+remove_person Bob3
+remove_person Bob4
+remove_person Bob5
+
+add_person A
+add_person B
+add_person C
+add_friendship A B
+add_friendship B C
+add_friendship C A
+print
+print_invite_list A 1000
+print_invite_list B -1
+print_invite_list DOESNT_EXIST 5

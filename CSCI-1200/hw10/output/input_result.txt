@@ -1,0 +1,24 @@
+27 Polygon(s):  black blue brown chartruese chestnut cyan denim eggplant fuschia gold green grey magenta mint olive orange pine pink plum purple red salmon silver tan teal white yellow
+8 Triangle(s):  brown chartruese cyan eggplant green purple red silver
+4 IsoscelesTriangle(s):  green purple red silver
+6 RightTriangle(s):  brown cyan eggplant green purple silver
+3 IsoscelesRightTriangle(s):  green purple silver
+1 ObtuseTriangle(s):  chartruese
+0 IsoscelesObtuseTriangle(s): 
+1 EquilateralTriangle(s):  red
+13 Quadrilateral(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 Trapezoid(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 Kite(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+0 Arrow(s): 
+13 Parallelogram(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 IsoscelesTrapezoid(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 Rhombus(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 Rectangle(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+13 Square(s):  blue chestnut fuschia magenta olive orange pine pink plum salmon tan teal yellow
+20 Shape(s) with all equal sides:  black blue chestnut denim fuschia gold grey magenta mint olive orange pine pink plum red salmon tan teal white yellow
+20 Shape(s) with all equal angles:  black blue chestnut denim fuschia gold grey magenta mint olive orange pine pink plum red salmon tan teal white yellow
+19 Shape(s) with a right angle:  blue brown chestnut cyan eggplant fuschia green magenta olive orange pine pink plum purple salmon silver tan teal yellow
+1 Shape(s) with an obtuse angle:  chartruese
+7 Shape(s) with an acute angle:  brown cyan eggplant green purple red silver
+8 Convex Shape(s):  brown chartruese cyan eggplant green purple red silver
+0 Concave Shape(s): 

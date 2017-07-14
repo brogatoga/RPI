@@ -1,0 +1,29 @@
+Class Hierarchy
+================================
+
+- Polygon (base class)
+- Triangle (3 sides)
+- RightTriangle (at least one right angle)
+- IsoscelesTriangle (at least 2 sides have same length)
+- EquilaterialTriangle (all 3 sides have same length)
+- IsocelesObtuseTriangle (at least one obtuse angle and two sides same length)
+- ObtuseTriangle (at least one obtuse angle)
+
+- Quadrilateral (4 sides)
+- Kite (2 pairs of equal-length sides adjacent to each other)
+- Rhombus (all sides are equal length)
+- Square (all angles are right angles)
+- Arrow
+- Trapezoid (at least one pair of parallel sides)
+- IsoscelesTrapezoid (when the sides that aren't parallel are equal in length and their angles are the same)
+- Parallelogram (2 pairs of parallel sides)
+- Rectangle (all angles are right angles)
+				
+Properties:
+	- HasAllEqualSides
+	- HasAllEqualAngles 
+	- HasARightAngle
+	- HasAnObtuseAngle	
+	- HasAnAcuteAngle
+	- IsConvex
+	- IsConcave

@@ -1,0 +1,101 @@
+Added person Bob
+Error trying to link friends Bob and Bob
+
+Bob
+  friends:
+  messages:
+
+Invite list of Bob 5: 
+Added message "hello world" to person Bob
+
+Bob
+  friends:
+  messages: "hello world"
+
+Added person Bob2
+Added person Bob3
+Added person Bob4
+Added person Bob5
+Linked friends Bob and Bob2
+Linked friends Bob2 and Bob3
+Linked friends Bob3 and Bob4
+Linked friends Bob4 and Bob5
+
+Bob
+  friends: Bob2
+  messages: "hello world"
+Bob2
+  friends: Bob3
+  messages:
+Bob3
+  friends: Bob4
+  messages:
+Bob4
+  friends: Bob5
+  messages:
+Bob5
+  friends:
+  messages:
+
+Invite list of Bob 5: Bob2 Bob3 Bob4 Bob5 
+Invite list of Bob3 1: Bob4 
+Invite list of Bob3 2: Bob4 Bob5 
+
+Bob
+  friends: Bob2
+  messages:
+Bob2
+  friends: Bob3
+  messages:
+Bob3
+  friends: Bob4
+  messages: "hello worlddd"
+Bob4
+  friends: Bob5
+  messages:
+Bob5
+  friends:
+  messages:
+
+
+Bob
+  friends: Bob2
+  messages:
+Bob2
+  friends: Bob3
+  messages:
+Bob3
+  friends: Bob4
+  messages:
+Bob4
+  friends: Bob5
+  messages:
+Bob5
+  friends:
+  messages: "hHiello worldddd"
+
+Removed person Bob
+Removed person Bob2
+Removed person Bob3
+Removed person Bob4
+Removed person Bob5
+Added person A
+Added person B
+Added person C
+Linked friends A and B
+Linked friends B and C
+Linked friends C and A
+
+A
+  friends: B
+  messages:
+B
+  friends: C
+  messages:
+C
+  friends: A
+  messages:
+
+Invite list of A 1000: A B C 
+Error trying to print invitation list for person B
+Error trying to print invitation list for person DOESNT_EXIST

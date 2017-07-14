@@ -1,0 +1,29 @@
+Hypotheses for Lab 3, Checkpoint #2
+=====================================================
+
+Q: What if length of arrays is not equal to n? 
+A: It depends on whether n is greater or less than the size of the array. 
+
+Q: What if n is too small (less than size of the array) ?
+A: If n is too small, then the function will not modify all the values
+in the array, instead it will only square from a[0] to a[n-1].
+
+Q: What if n is too big (larger than size of the array) ?
+A: Then there might be a buffer overflow or segfault, because we will
+iterate past the bounds of the array and into arbitary memory spaces which
+may end up causing a memory access violation. 
+
+Q: What if A array is larger than the B array?
+A: Assuming that n is equal to length of A then, then there will be a 
+segfault since once we go past B[len(A)-1], we will be writing into 
+random memory spaces which is not supposed to happen. 
+
+Q: What if A array is smaller than the B array?
+A: Assuming that n is equal to len(A) again, then B will contain the
+squared values of A, but it will also have len(B) - len(A) remaining
+spots for elements that are unused since it is bigger than it needs to be. 
+
+Q: How might the order of the variables impact the situation? 
+A: The order that the variables were declared in main() will have an effect
+on which memory addresses the arrays start at, but I highly doubt that it will
+affect the actual functionality of the program in any way. 
