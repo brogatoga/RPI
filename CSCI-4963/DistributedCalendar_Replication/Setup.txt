@@ -1,0 +1,21 @@
+Setup Instructions
+============================
+
+Requirements:
+	- Python 2.7.x
+	- Either "pip" or "easy_install" module
+	- Flask and parse library
+	- Unix-based system (optional)
+	
+To start the server:
+	1. Modify the NodeData global variable in the server.py file
+	2. Run "pip install flask"
+	3. Run "pip install parse"
+	4. run "python server.py [nodeID]"
+		- where nodeID is an integer value from 1-4
+	
+Press Ctrl+C to terminate the application. This will terminate
+both the web server and TCP socket server (they run on two separate threads).
+
+Log files and calendar files are stored as log_N.txt and calendar_N.txt respectively,
+where N is the node ID ranging from 1-4.

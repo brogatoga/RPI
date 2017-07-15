@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>[DSP1] Node {{ id }} - {{ name }}</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+	body {
+		background: #efefff;
+		font: 16px Sans-Serif;
+		color: #151515;
+	}
+	
+	input, input:hover, input:active {
+		padding: 3px 5px;
+		font-size: 1.2em;
+	}
+	
+	#createForm input[type=submit], #createForm input[type=submit]:active, #createForm input[type=submit]:focus,
+	#createForm input[type=reset], #createForm input[type=reset]:active, #createForm input[type=reset]:focus {
+		background: #efefef;
+		border: 1px solid #353535;
+		padding: 10px 15px;
+		font-size: 1.5em;
+		font-weight: bold;
+		color: #151515;
+	}
+	
+	#createForm input[type=submit]:hover, #createForm input[type=reset]:hover {
+		background: #ffffff;
+		border-color: #000000;
+		color: #151515;
+		cursor: pointer;
+	}
+	
+	select, option {
+		font-size: 1.4em;
+	}
+	
+	a, a:visited, a:link, a:active {
+		color: #0000ee;
+		text-decoration: none;
+	}
+	
+	a:hover {
+		color: #0000ff;
+		text-decoration: underline;
+	}
+	
+	p {
+		line-height: 1em;
+		padding: 0;
+		margin: 0;
+	}
+	
+	#appointments td, #appointments th {
+		padding: 5px 10px;
+	}
+	
+	#log {
+		text-align: left;
+		margin: 0;
+		padding: 0;
+	}
+	
+	#quick, #quick:hover, #quick:active {
+		border: 1px solid #858585;
+		background: #dfdfdf;
+	}
+	
+	#quick:hover {
+		cursor: pointer;
+	}
+	
+	#quick:focus {
+		border-color: #353535;
+		background: #efefef;
+	}
+	
+	#quickHelp {
+		font-size: 150%;
+		font-weight: bold;
+	}
+	
+	</style>
+	
+	<script type="text/javascript">
+	"use strict";
+	
+	(function(window) {
+		var quickCreatePattern = ["*name", "*day", "*start", "to", "*end", "with", "*participants"];
+		var quickCreateDayMap = { "sun": 1, "mon": 2, "tue": 3, "wed": 4, "thu": 5, "fri": 6, "sat": 7 };
+		var quickCreateLetterMap = { "a": "alan", "b": "bob", "c": "carl", "d": "david", "e": "earl" };
+		var intToDay = { 1: "Sunday", 2: "Monday", 3: "Tuesday", 4: "Wednesday", 5: "Thursday", 6: "Friday", 7: "Saturday" };
+		var intToNodeName = { 1 : "Alan", 2 : "Bob", 3 : "Carl", 4 : "David", 5 : "Earl" };
+		var timestampToTime = {};		// Maps 30 to 12:30am
+		var timeToTimestamp = {};		// Maps 12:30am to 30
+		var appointmentData = {{ calendar|safe }};		// Appointment data in JSON format, imported from the server side
+		var alerts = {{ alerts|safe }};					// Alert data in JSON format, imported from the server side
+		
+		
+		// Populate a <select> with <option> tags
+		function populateSelect(id, options) {
+			if (!id || !options)
+				return;
+			
+			var select = document.getElementById(id);
+			if (!select)
+				return;
+			
+			for (var text in options) {
+				var option = document.createElement("option");
+				option.text = text;
+				option.value = options[text];
+				select.add(option);
+			}
+		}
+		
+		
+		// On page load
+		document.addEventListener("DOMContentLoaded", function() {
+			
+			// Populate <select> elements
+			var timeToValue = {};
+			
+			for (var time = 0; time <= 1410; time += 30) {
+				var hours = Math.floor(time / 60);
+				var minutes = time - (hours * 60);
+				var am = true;
+				
+				if (hours > 12) {
+					hours -= 12;
+					am = false;
+				}
+				else if (hours == 12)
+					am = false;
+				else if (hours == 0)
+					hours = 12;
+				
+				var timeString = hours.toString() + ":" + (minutes == 0 ? "00" : minutes).toString() + (am ? "am" : "pm");
+				timeToValue[timeString] = time;
+				timeToTimestamp[timeString] = time;
+				timestampToTime[time] = timeString;
+			}
+			
+			populateSelect("start_time", timeToValue);
+			populateSelect("end_time", timeToValue);
+			populateSelect("day", {
+				"Sunday" : 1, "Monday" : 2, "Tuesday" : 3, "Wednesday" : 4,
+				"Thursday" : 5, "Friday" : 6, "Saturday" : 7
+			});
+			
+			
+			// Sort the appointments from earliest to latest
+			appointmentData.sort(function(a, b) {
+				var aDay = parseInt(a.day);
+				var bDay = parseInt(b.day);
+				return (aDay != bDay) ? (aDay < bDay) : (parseInt(a.startTime) < parseInt(b.startTime));
+			});
+			
+			
+			// Show the node's calendar data (list of all appointments)
+			var table = document.getElementById("appointments");
+			for (var c = 0; c < appointmentData.length; c++) {
+				
+				// New table row
+				var app = appointmentData[c];
+				var row = document.createElement("tr");
+				row.id = app.id;
+				
+				
+				// Populate fields
+				var name = document.createElement("td");
+				var day = document.createElement("td");
+				var startTime = document.createElement("td");
+				var endTime = document.createElement("td");
+				var participants = document.createElement("td");
+				var deleteLink = document.createElement("td");
+				var appointmentID = app.name.toLowerCase().replace(" ", "___");		// Replace spaces with three underscores
+				
+				name.innerHTML = app.name;
+				day.innerHTML = intToDay[parseInt(app.day)];
+				startTime.innerHTML = timestampToTime[parseInt(app.startTime)];
+				endTime.innerHTML = timestampToTime[parseInt(app.endTime)];
+				participants.innerHTML = app.participants.map(function(x) { return intToNodeName[x]; }).join(", ");
+				deleteLink.innerHTML = "<form action='/delete' method='post'><input type='hidden' name='id' id='id' " + 
+					" value='" + appointmentID + "' /><input type='submit' class='deleteButton' value='Delete' /></form>";
+				
+				
+				// Add columns to rows
+				row.appendChild(name);
+				row.appendChild(day);
+				row.appendChild(startTime);
+				row.appendChild(endTime);
+				row.appendChild(participants);
+				row.appendChild(deleteLink);
+		
+		
+				// Add row to table
+				table.appendChild(row);
+			}
+			
+			
+			// Setup form error handling
+			document.getElementById("createForm").addEventListener("submit", function(e) {
+				if (document.getElementById("name").value.length == 0) {
+					alert("Please enter in correct values for the fields.");
+					e.preventDefault();
+					return;
+				}
+				
+				if (parseInt(document.getElementById("start_time").value) >= parseInt(document.getElementById("end_time").value)) {
+					alert("Start time cannot be later than end time.");
+					e.preventDefault();
+					return;
+				}
+			})
+			
+			
+			// Add confirmation message to delete buttons
+			var deleteButtons = document.getElementsByClassName("deleteButton");
+			for (var c = 0; c < deleteButtons.length; c++) {
+				deleteButtons[c].addEventListener("click", function(e) {
+					if (!confirm("Are you sure you want to delete this appointment? This can NOT be undone!")) {
+						e.preventDefault();
+						return false;
+					}
+					return true;
+				});
+			}
+			
+			
+			// For the participants section in the form, check and hide this node's name
+			var participantIds = [ "alan", "bob", "carl", "david", "earl" ];
+			var participantName = participantIds[{{ id }} - 1];
+			var checkbox = document.getElementById(participantName);
+			
+			if (checkbox) {
+				checkbox.checked = true;
+				checkbox.style.display = "none";
+				document.getElementById(participantName + "-p").style.display = "none";
+			}
+			
+			
+			// Remove our participant entry from the "quick create" letter map
+			delete quickCreateLetterMap[participantIds[{{ id }} - 1][0]];
+			
+			
+			// Quick create appointment feature
+			var quickText = document.getElementById("quick");
+			var quickHelp = document.getElementById("quickHelp");
+			
+			quickText.addEventListener("keydown", function(e) {
+				if (quickText.value.length == 0 || e.keyCode != 13)		// 13 = enter key
+					return;
+				
+				// Parse the data items out of the formatted input text string and store it in a dictionary
+				var data = {};
+				var pieces = quickText.value.split(" ");
+				
+				for (var c = 0; c < pieces.length; c++) {
+					if (c >= quickCreatePattern.length)
+						break;
+					
+					if (quickCreatePattern[c][0] == "*")
+						data[quickCreatePattern[c].substring(1)] = pieces[c];
+					else if (pieces[c] != quickCreatePattern[c])
+						break;
+				}
+				
+				
+				// Remove data items from dictionary if they are invalid
+				if ("day" in data && !(data["day"] in quickCreateDayMap))
+					delete data["day"];
+				if ("start" in data && !(data["start"] in timeToTimestamp))
+					delete data["start"];
+				if ("end" in data && !(data["end"] in timeToTimestamp))
+					delete data["end"];
+				
+				
+				// Reset some form controls before updating them
+				for (var x in quickCreateLetterMap)
+					document.getElementById(quickCreateLetterMap[x]).checked = false;
+				
+				
+				// Update form controls based on the data items
+				if ("name" in data)  document.getElementById("name").value = data["name"];
+				if ("day" in data)   document.getElementById("day").value = quickCreateDayMap[data["day"]];
+				if ("start" in data) document.getElementById("start_time").value = timeToTimestamp[data["start"]];
+				if ("end" in data)   document.getElementById("end_time").value = timeToTimestamp[data["end"]];
+				if ("participants" in data) {
+					for (var c = 0; c < data["participants"].length; c++) {
+						if (data["participants"][c] in quickCreateLetterMap)
+							document.getElementById(quickCreateLetterMap[data["participants"][c]]).checked = true;
+					}
+				}
+			});
+			
+			quickHelp.addEventListener("click", function(e) {
+				alert("For example: Type 'dinner mon 8:00am to 12:00pm with bcd' then press Enter");
+				e.preventDefault();
+			});
+			
+			
+			// Periodically check with the server to see if we need to reload
+			setInterval(function() {
+				var request = new XMLHttpRequest();
+				request.onreadystatechange = function() {
+					if (request.readyState == 4 && request.status == 200 && request.responseText == "1")
+						location.reload();
+				};
+				request.open("POST", "/ask_reload", true);
+				request.send();
+			}, 1000);
+			
+			
+			// Display alerts to user
+			if (alerts && alerts.length) {
+				alert("You have new alerts: \n\n" + alerts.join("\n"));
+			}
+		});
+	})(this);
+	</script>
+</head>
+<body>
+	<div id="container">
+		<h1>Node {{ id }} - {{ name }} &nbsp; &nbsp; (<a href="/force_reload">reload</a>)</h1>
+		<hr />
+		<br />
+		<h2>Manage and View Appointments</h2>
+		<table id="appointments" border="1">
+			<tr>
+				<th>Appointment Name</th>
+				<th>Day</th>
+				<th>Start Time</th>
+				<th>End Time</th>
+				<th>Participants</th>
+				<th>Delete</th>
+			</tr>
+			
+			<!-- Rest to be filled in using JS -->
+		</table>
+		<br />
+		<hr />
+		<br />
+		<h2>Create Appointment</h2>
+		<p>Quick Create: <input type="text" size="80" name="quick" id="quick" /> &nbsp; <a id="quickHelp" href="#">?</a></p>
+		<br />
+		
+		<form id="createForm" action="/create" id="create_form" method="post">
+			<table>
+				<tr>
+					<td><label for="name">Name: &nbsp; </label></td>
+					<td><input type="text" name="name" id="name" /></td>
+				</tr>
+				<tr>
+					<td><label for="day">Day: &nbsp; </label></td>
+					<td><select name="day" id="day"></select></td>
+				</tr>
+				<tr>
+					<td><label for="start_time">Start Time: &nbsp; </label></td>
+					<td><select name="start_time" id="start_time"></select></td>
+				</tr>
+				<tr>
+					<td><label for="end_time">End Time: &nbsp; </label></td>
+					<td><select name="end_time" id="end_time"></select></td>
+				</tr>
+				<tr>
+					<td><label for="participants">Participants: &nbsp; </label></td>
+					<td>
+						<div>
+							<p id="alan-p"><input type="checkbox" name="alan" id="alan" value="Alan" /> Alan</p>
+							<p id="bob-p"><input type="checkbox" name="bob" id="bob" value="Bob" /> Bob</p>
+							<p id="carl-p"><input type="checkbox" name="carl" id="carl" value="Carl" /> Carl</p>
+							<p id="david-p"><input type="checkbox" name="david" id="david" value="David" /> David</p>
+							<p id="earl-p"><input type="checkbox" name="earl" id="earl" value="Earl" /> Earl</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<br /><br />
+			<input type="submit" name="create" id="create" value="Create" />
+		</form>
+		<br />
+		<hr />
+		<br />
+		<h2>Log</h2>
+		<pre id="log">
+{{ log|safe }}
+		</pre>
+	</div>
+</body>
+</html>

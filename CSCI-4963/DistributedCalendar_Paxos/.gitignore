@@ -1,0 +1,7 @@
+# List of files to be ignored:
+
+log_*.txt
+pn_*.txt
+Setup.txt
+*.pem
+private/*

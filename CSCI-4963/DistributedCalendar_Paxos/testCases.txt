@@ -1,0 +1,64 @@
+[CREATE/DELETE TEST]
+// Create event 
+// For all nodes
+A creates	appointment 01: 	A,B,C,D,E 	for 1:00-1:30
+01 sun 1:00pm to 1:30pm with abcde
+
+// For some nodes including leader
+E creates	appointment 02: 	A,C,D,E		for 2:00-2:30
+02 sun 2:00pm to 2:30pm with acde
+
+// For some nodes not including leader
+C creates 	appointment 03: 	A,B,C	 	for 3:00-3:30
+03 sun 3:00pm to 3:30pm with abc
+
+// Conflict with other nodes
+E creates	appointment 04:		A,E		for 2:00-3:00
+04 sun 2:00pm to 3:00pm with ae
+
+// Conflict with itself
+C creates	appiontment 05:		C		for 3:00-4:00
+05 sun 3:00pm to 4:00pm with c
+
+// Delete event 
+// When it is a participant
+B deletes	appointment 02
+
+// When it is not a participant
+D deletes	appointment 03
+
+
+[CRUSH TEST]
+E crushes
+A crushes
+
+// Non-conflict appiointment with the crushed nodes
+B creates	appointment 06:		A,E		for 4:00-4:30
+06 sun 4:00pm to 4:30pm with abe
+
+// Conflicted appiointment with the crushed nodes
+C creates	appointment 07:		A,E		for 4:00-5:00
+07 sun 4:00pm to 5:00pm with ace
+
+// Non-conflict appiointment with the normal nodes
+B creates	appointment 08:		B,C		for 5:00-5:30
+08 sun 5:00pm to 5:30pm with bc
+
+// Conflicted appiointment with the crushed nodes
+C creates	appointment 09:		C,D		for 5:00-6:00
+09 sun 5:00pm to 6:00pm with cd
+
+A recoveries
+E recoveries
+
+// Non-conflict appiointment 
+A creates	appointment 10:		A,B,C,D,E	for 6:00-6:30
+10 sun 6:00pm to 6:30pm with abcde
+
+// Conflicted appiointment 
+E creates	appointment 11:		A,E		for 6:00-7:00
+11 sun 6:00pm to 7:00pm with ae
+
+
+
+

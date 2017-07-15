@@ -1,0 +1,6 @@
+# List of files to be ignored:
+
+log*.txt
+calendar*.txt
+debug.txt
+private/*
