@@ -1,4 +1,4 @@
-# RPI Coursework
+# RPI
 
 * CSCI 1200 - Data Structures
 * CSCI 4210 - Operating Systems
